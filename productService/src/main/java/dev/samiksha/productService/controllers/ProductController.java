@@ -1,5 +1,6 @@
 package dev.samiksha.productService.controllers;
 
+import dev.samiksha.productService.dtos.FakeStoreProductdto;
 import dev.samiksha.productService.dtos.GenericProductdto;
 import dev.samiksha.productService.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,9 @@ public class ProductController {
     }
 
     @DeleteMapping("{id}")
-    public void deleteProductById(){
+    public GenericProductdto deleteProductById(@PathVariable("id") Long id){
+
+      return  productService.deleteProductById(id);
 
     }
 
