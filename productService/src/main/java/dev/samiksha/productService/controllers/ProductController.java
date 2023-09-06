@@ -33,8 +33,9 @@ public class ProductController {
     }
 
     @PostMapping
-    public void createProduct(){
+    public GenericProductdto createProduct(@RequestBody GenericProductdto product){
 
+        return productService.createProduct(product);
     }
 
     @PutMapping("{id}")

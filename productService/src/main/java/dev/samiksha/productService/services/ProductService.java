@@ -6,4 +6,6 @@ import dev.samiksha.productService.models.Product;
 public interface ProductService {
 
      GenericProductdto getProductById(Long id);
+
+     GenericProductdto createProduct(GenericProductdto productdto);
 }
