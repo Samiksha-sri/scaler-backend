@@ -8,6 +8,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RequestCallback;
+import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
@@ -63,5 +65,21 @@ public class FakeStoreProductService implements ProductService{
         GenericProductdto deleteProduct = responseEntity.getBody();
 
         return deleteProduct;
+    }
+
+    @Override
+    public GenericProductdto updateProductById(GenericProductdto genericProductdto, Long id) {
+      RestTemplate restTemplate = restTemplateBuilder.build();
+      RequestCallback requestCallback = restTemplate.httpEntityCallback(genericProductdto, FakeStoreProductdto.class);
+      ResponseExtractor<ResponseEntity<FakeStoreProductdto>> responseExtractor = restTemplate.responseEntityExtractor(FakeStoreProductdto.class);
+      ResponseEntity<FakeStoreProductdto> responseEntity = restTemplate.execute(productByIDURL, HttpMethod.PUT,
+              requestCallback, responseExtractor, id);
+      FakeStoreProductdto fakeStoreProductdto = responseEntity.getBody();
+        genericProductdto.setId(fakeStoreProductdto.getId());
+          genericProductdto.setPrice(fakeStoreProductdto.getPrice());
+          genericProductdto.setDescription(fakeStoreProductdto.getDescription());
+          genericProductdto.setCategory(fakeStoreProductdto.getCategory());
+
+        return genericProductdto;
     }
 }
