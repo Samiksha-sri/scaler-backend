@@ -4,6 +4,8 @@ import dev.samiksha.productService.dtos.FakeStoreProductdto;
 import dev.samiksha.productService.dtos.GenericProductdto;
 import dev.samiksha.productService.models.Product;
 
+import java.util.List;
+
 public interface ProductService {
 
      GenericProductdto getProductById(Long id);
@@ -13,4 +15,6 @@ public interface ProductService {
      GenericProductdto deleteProductById(Long id);
 
      GenericProductdto updateProductById( GenericProductdto productdto, Long id);
+
+     List<GenericProductdto> getAllProducts();
 }

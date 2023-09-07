@@ -5,24 +5,35 @@ import dev.samiksha.productService.dtos.GenericProductdto;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service("fakeStoreProductService")
 public class FakeStoreProductService implements ProductService{
 
     private RestTemplateBuilder restTemplateBuilder;
     private String productByIDURL = "https://fakestoreapi.com/products/{id}";
-    private String createProductURL = "https://fakestoreapi.com/products";
+    private String productURL = "https://fakestoreapi.com/products";
     public FakeStoreProductService(RestTemplateBuilder restTemplateBuilder){
         this.restTemplateBuilder = restTemplateBuilder;
+    }
+
+    private GenericProductdto convertFakeStoreProductToGenericProduct(FakeStoreProductdto fakeStoreProductdto){
+        GenericProductdto genericProductdto = new GenericProductdto();
+        genericProductdto.setId(fakeStoreProductdto.getId());
+        genericProductdto.setPrice(fakeStoreProductdto.getPrice());
+        genericProductdto.setDescription(fakeStoreProductdto.getDescription());
+        genericProductdto.setTitle(fakeStoreProductdto.getTitle());
+        genericProductdto.setImage(fakeStoreProductdto.getImage());
+        genericProductdto.setCategory(fakeStoreProductdto.getCategory());
+
+        return genericProductdto;
     }
 
     @Override
@@ -48,7 +59,7 @@ public class FakeStoreProductService implements ProductService{
 
         RestTemplate restTemplate = restTemplateBuilder.build();
         ResponseEntity<GenericProductdto> responseEntity =
-                restTemplate.postForEntity(createProductURL, productdto, GenericProductdto.class);
+                restTemplate.postForEntity(productURL, productdto, GenericProductdto.class);
 
         GenericProductdto setProduct = responseEntity.getBody();
 
@@ -81,5 +92,18 @@ public class FakeStoreProductService implements ProductService{
           genericProductdto.setCategory(fakeStoreProductdto.getCategory());
 
         return genericProductdto;
+    }
+
+    @Override
+    public List<GenericProductdto> getAllProducts() {
+
+        RestTemplate restTemplate = restTemplateBuilder.build();
+        ResponseEntity<FakeStoreProductdto[]> responseEntity = restTemplate.getForEntity(productURL, FakeStoreProductdto[].class);
+        List<GenericProductdto> productdtos = new ArrayList<>();
+
+        for(FakeStoreProductdto fakeStoreProductdto : responseEntity.getBody()){
+            productdtos.add(convertFakeStoreProductToGenericProduct(fakeStoreProductdto));
+        }
+        return productdtos;
     }
 }
