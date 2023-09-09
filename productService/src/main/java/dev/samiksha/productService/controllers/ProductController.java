@@ -1,10 +1,14 @@
 package dev.samiksha.productService.controllers;
 
+import dev.samiksha.productService.dtos.ExceptionDTO;
 import dev.samiksha.productService.dtos.FakeStoreProductdto;
 import dev.samiksha.productService.dtos.GenericProductdto;
+import dev.samiksha.productService.exceptions.NotFoundException;
 import dev.samiksha.productService.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,9 +31,13 @@ public class ProductController {
     }
 
     @GetMapping("{id}")
-    public GenericProductdto getProductById(@PathVariable("id") Long id){
+    public ResponseEntity<GenericProductdto> getProductById(@PathVariable("id") Long id) throws NotFoundException {
 
-        return productService.getProductById(id);
+        return new ResponseEntity<>(
+                productService.getProductById(id),
+                HttpStatus.OK
+        );
+
     }
 
     @DeleteMapping("{id}")

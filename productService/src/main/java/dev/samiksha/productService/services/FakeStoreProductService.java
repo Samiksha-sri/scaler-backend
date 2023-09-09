@@ -2,6 +2,7 @@ package dev.samiksha.productService.services;
 
 import dev.samiksha.productService.dtos.FakeStoreProductdto;
 import dev.samiksha.productService.dtos.GenericProductdto;
+import dev.samiksha.productService.exceptions.NotFoundException;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -37,21 +38,17 @@ public class FakeStoreProductService implements ProductService{
     }
 
     @Override
-    public GenericProductdto getProductById(Long id) {
+    public GenericProductdto getProductById(Long id) throws NotFoundException {
       RestTemplate restTemplate =  restTemplateBuilder.build();
       ResponseEntity<FakeStoreProductdto> responseEntity =
               restTemplate.getForEntity(productByIDURL, FakeStoreProductdto.class, id);
 
     FakeStoreProductdto fakeStoreProductdto = responseEntity.getBody();
-        GenericProductdto genericProductdto = new GenericProductdto();
 
-        genericProductdto.setTitle(fakeStoreProductdto.getTitle());
-        genericProductdto.setPrice(fakeStoreProductdto.getPrice());
-        genericProductdto.setCategory(fakeStoreProductdto.getCategory());
-        genericProductdto.setDescription(fakeStoreProductdto.getDescription());
-        genericProductdto.setImage(fakeStoreProductdto.getImage());
+    if(fakeStoreProductdto == null)
+        throw new NotFoundException("Product with id  " + id + "not found");
 
-        return genericProductdto;
+        return convertFakeStoreProductToGenericProduct(fakeStoreProductdto);
     }
 
     @Override
@@ -69,11 +66,13 @@ public class FakeStoreProductService implements ProductService{
     @Override
     public GenericProductdto deleteProductById(Long id) {
         RestTemplate restTemplate = restTemplateBuilder.build();
-        HttpEntity<GenericProductdto> request = new HttpEntity<GenericProductdto>(new GenericProductdto());
-         ResponseEntity<GenericProductdto> responseEntity =
-                 restTemplate.exchange(productByIDURL, HttpMethod.DELETE,
-                         request, GenericProductdto.class,id);
-        GenericProductdto deleteProduct = responseEntity.getBody();
+
+        RequestCallback requestCallback = restTemplate.acceptHeaderRequestCallback(FakeStoreProductdto.class);
+        ResponseExtractor<ResponseEntity<FakeStoreProductdto>> responseExtractor = restTemplate.responseEntityExtractor(FakeStoreProductdto.class);
+        ResponseEntity<FakeStoreProductdto> responseEntity = restTemplate.execute(productByIDURL, HttpMethod.DELETE, requestCallback, responseExtractor,id);
+        FakeStoreProductdto fakeStoreProductdto = responseEntity.getBody();
+
+        GenericProductdto deleteProduct = convertFakeStoreProductToGenericProduct(fakeStoreProductdto);
 
         return deleteProduct;
     }
@@ -86,12 +85,9 @@ public class FakeStoreProductService implements ProductService{
       ResponseEntity<FakeStoreProductdto> responseEntity = restTemplate.execute(productByIDURL, HttpMethod.PUT,
               requestCallback, responseExtractor, id);
       FakeStoreProductdto fakeStoreProductdto = responseEntity.getBody();
-        genericProductdto.setId(fakeStoreProductdto.getId());
-          genericProductdto.setPrice(fakeStoreProductdto.getPrice());
-          genericProductdto.setDescription(fakeStoreProductdto.getDescription());
-          genericProductdto.setCategory(fakeStoreProductdto.getCategory());
 
-        return genericProductdto;
+
+        return convertFakeStoreProductToGenericProduct(fakeStoreProductdto);
     }
 
     @Override
