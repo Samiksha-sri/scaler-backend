@@ -1,4 +1,4 @@
-package dev.samiksha.productService.dtos;
+package dev.samiksha.productService.productServiceClients;
 
 import lombok.Getter;
 import lombok.Setter;

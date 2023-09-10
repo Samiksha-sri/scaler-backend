@@ -1,9 +1,7 @@
 package dev.samiksha.productService.services;
 
-import dev.samiksha.productService.dtos.FakeStoreProductdto;
 import dev.samiksha.productService.dtos.GenericProductdto;
 import dev.samiksha.productService.exceptions.NotFoundException;
-import dev.samiksha.productService.models.Product;
 
 import java.util.List;
 

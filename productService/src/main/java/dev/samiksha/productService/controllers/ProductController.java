@@ -1,11 +1,8 @@
 package dev.samiksha.productService.controllers;
 
-import dev.samiksha.productService.dtos.ExceptionDTO;
-import dev.samiksha.productService.dtos.FakeStoreProductdto;
 import dev.samiksha.productService.dtos.GenericProductdto;
 import dev.samiksha.productService.exceptions.NotFoundException;
 import dev.samiksha.productService.services.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
