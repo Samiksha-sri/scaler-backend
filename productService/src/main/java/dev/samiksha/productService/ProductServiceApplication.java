@@ -11,9 +11,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ProductServiceApplication implements CommandLineRunner {
+public class ProductServiceApplication {
 
-	private UserRepository userRepository;
+	public static void main(String[] args) {
+		SpringApplication.run(ProductServiceApplication.class, args);
+	}
+
+	/*private UserRepository userRepository;
 	private MentorRepository mentorRepository;
 
 	ProductServiceApplication(@Qualifier("st_user_repository") UserRepository userRepository,
@@ -22,9 +26,7 @@ public class ProductServiceApplication implements CommandLineRunner {
 		this.mentorRepository = mentorRepository;
 	}
 
-	public static void main(String[] args) {
-		SpringApplication.run(ProductServiceApplication.class, args);
-	}
+
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -39,6 +41,6 @@ public class ProductServiceApplication implements CommandLineRunner {
 		mentor.setAverageRating(4.5);
 		mentor.setEmail("samiksha@gmail.com");
 		mentorRepository.save(mentor);
-	}
+	}*/
 
 }
